@@ -1,6 +1,6 @@
 # NVIDIA Driver Repack Tool
 
- 1. Install AutoHotkey([Link](https://www.autohotkey.com/download/ahk-v2.exe)).
+ 1. Install [AutoHotkey](https://www.autohotkey.com/download/ahk-v2.exe) and download [this repository](https://github.com/alanfox2000software/NVRepackTool/archive/refs/heads/main.zip).
  2. Place the downloaded .exe driver files in the Temp\Input folder.
  3. Run '1. Extract.ahk', all drivers will be extracted to the Temp\Extract folder.
  4. Run '2. Patch.ahk', it will cleanup .inf and nvi files.
