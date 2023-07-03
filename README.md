@@ -10,7 +10,3 @@
 
 [More info](https://puresoftapps-nvidia.blogspot.com/)
 
-```
-Apply x64 library patch to corresponding file in %WINDIR%\system32\ with the Win_1337_Apply_Patch tool.
-
-    If patching fails, close all applications using nvencodeapi64.dll, such as OBS Studio, Plex or Discord.
