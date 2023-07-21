@@ -6,7 +6,7 @@
 #NoEnv
 SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
-
+if A_Is64bitOS = 1 
 {
     7z = %A_WorkingDir%\Tools\7zip\64\7z.exe
 }
