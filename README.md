@@ -4,8 +4,8 @@
  2. Place the downloaded .exe driver files in the Temp\Input folder.
  3. Edit the `config.ini` file and modify the following variables. Set them to 0 to remove the corresponding file(s), or set them to 1 to add/keep those file(s).
    - `pi_nvfbcwrp` [nvfbcwrp32.dll, nvfbcwrp64.dll](https://github.com/keylase/nvidia-patch/tree/master/win/nvfbcwrp)
-   - `pi_nvfbc` nNvFBC.dll, nNvFBC64.dll
-   - `pi_nvifr` nNvIFR.dll, nNvIFR64.dll
+   - `pi_nvfbc` NvFBC.dll, NvFBC64.dll
+   - `pi_nvifr` NvIFR.dll, NvIFR64.dll
  4. Run `1. Extract.ahk`, all drivers will be extracted to the Temp\Extract folder.
  5. Run `2. Patch.ahk`, it will cleanup .inf and nvi files.
    - [Optional] Follow [this guide](https://github.com/keylase/nvidia-patch/tree/master/win) if you want NVENC patch. Copy `nvencodeapi64.dll` and `nvencodeapi.dll` located at `Temp\Extract\{driver folder}\Disaply.Driver` folder to `Temp\Extract\{driver folder}\NVENC`. Select those files under the `NVENC` folder for patching.
