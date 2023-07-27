@@ -50,12 +50,18 @@ Loop, Files, %input_dir%\*.exe, F
 {
 
     FileNameNoExt := StrReplace(A_LoopFileName, "." . A_LoopFileExt)
-    NvCplSetupInt = %extract_dir%\%FileNameNoExt%\Display.Driver\NvCplSetupInt.exe
+    DisplayDir = %extract_dir%\%FileNameNoExt%\Display.Driver
+    NvCplSetupInt = %DisplayDir%\NvCplSetupInt.exe
     NvCplSetupIntDir = %extract_dir%\%FileNameNoExt%\NvCplSetupInt
-    NvContainerSetup = %extract_dir%\%FileNameNoExt%\Display.Driver\NvContainerSetup.exe
+    NvContainerSetup = %DisplayDir%\NvContainerSetup.exe
     NvContainerSetupDir = %extract_dir%\%FileNameNoExt%\NvContainerSetup
-    NvENC64 = %extract_dir%\%FileNameNoExt%\Display.Driver\nvencodeapi64.dl_
-    NvENC32 = %extract_dir%\%FileNameNoExt%\Display.Driver\nvencodeapi.dl_
+    NvENC64 = %DisplayDir%\nvencodeapi64.dl_
+    NvENC32 = %DisplayDir%\nvencodeapi.dl_
+    NvFBC64 = %DisplayDir%\nvfbc64.dl_
+    NvFBC32 = %DisplayDir%\nvfbc.dl_
+    NvIFR64 = %DisplayDir%\nvife64.dl_
+    NvIFR32 = %DisplayDir%\nvifr.dl_
+
 
     ; SFX Extract
     runwait, "%Sign64%" remove /s "%A_LoopFileFullPath%"
@@ -64,9 +70,22 @@ Loop, Files, %input_dir%\*.exe, F
     ; Driver Archive Extract
     runwait, %7z% x "%output_dir%\%A_LoopFileName%.7z" -y -o"%extract_dir%\%FileNameNoExt%" setup.exe setup.cfg ListDevices.txt license.txt EULA.txt -r Display.Driver\* HDAudio\* NVI2\* PhysX\* PPC\* NGXCore\* -xr@exclude.lst %SavedPara%
 
-    ;NvENC Extract
-    runwait, %7z% x "%NvENC64%" -y -o"%extract_dir%\%FileNameNoExt%\NvENC"
-    runwait, %7z% x "%NvENC32%" -y -o"%extract_dir%\%FileNameNoExt%\NvENC"
+    ;dl_ Extract and File Deletion
+    ExtractAndDelete(NvENC64)
+    ExtractAndDelete(NvENC32)
+    ExtractAndDelete(NvFBC64)
+    ExtractAndDelete(NvFBC32)
+    ExtractAndDelete(NvIFR64)
+    ExtractAndDelete(NvIFR32)
+
+    ExtractAndDelete(filename)
+    {
+        if (FileExist(filename))
+        {
+            runwait, %7z% x "%filename%" -y -o"%DisplayDir%"
+            FileDelete, %filename%
+        }
+    }
 
 ;    runwait, %7z% x "%output_dir%\%A_LoopFileName%.7z" -y -o"%extract_dir%\%FileNameNoExt%" setup.exe setup.cfg ListDevices.txt license.txt EULA.txt -r Display.Driver\* HDAudio\* NVI2\* PhysX\* PPC\* NGXCore\* -x!GFExperience\EULA.txt -x!GFExperience\license.txt -x!NVI2\NVNetworkService.exe -x!NVI2\NVNetworkServiceAPI.dll -x!NVI2\NvInstallerUtil.dll -x!FrameViewSDK\EULA.txt -x!Update.Core\NvTmMon.exe -x!Update.Core\NvTmRep.exe -x!Display.Driver\DisplayDriverRAS.dll -x!Display.Driver\NvTelemetry64.dll -x!Display.Driver\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll -x!Display.Driver\NvProfileUpdaterPlugin.dll -x!Display.Driver\Display.NvContainer\plugins\Session\NvProfileUpdaterPlugin.dll -x!Display.Driver\nvtopps.dll -x!Display.Driver\Display.NvContainer\plugins\Session\_nvtopps.dll -x!Display.Driver\nvgwls.exe
 

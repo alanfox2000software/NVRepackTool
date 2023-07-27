@@ -22,6 +22,8 @@ XML = C:\NVIDIAInstall.xml
 Drs = %A_AppDataCommon%\NVIDIA Corporation\Drs
 fbc = %A_WorkingDir%\Display.Driver\nvfbc.dll
 fbc64 = %A_WorkingDir%\Display.Driver\nvfbc64.dll
+fbc_ = %A_WorkingDir%\Display.Driver\nvfbc_.dll
+fbc64_ = %A_WorkingDir%\Display.Driver\nvfbc64_.dll
 fbcwrp = %A_WorkingDir%\NvFBC\nvfbcwrp32.dll
 fbcwrp64 = %A_WorkingDir%\NvFBC\nvfbcwrp64.dll
 nvenc = %A_WorkingDir%\NVENC\nvencodeapi.dll
@@ -102,26 +104,40 @@ Loop % GUIDDL.Length()
 {
     GuiControl, Main: +AltSubmit, % GUIDDL[A_Index]
 }
-if (A_Is64bitOS) {
-    if (!(FileExist(fbcwrp) && FileExist(fbcwrp64))) {
-        GuiControl, Main: Disable +AltSubmit, c_nvfbcwrp
+if (A_Is64bitOS)
+{
+    if (!(FileExist(fbc_) && FileExist(fbc64_)))
+    {
+        if (!FileExist(fbcwrp) && !FileExist(fbcwrp64))
+        {
+            GuiControl, Main: Disable +AltSubmit, c_nvfbcwrp
+        }
+        if (!FileExist(fbc) && !FileExist(fbc64))
+        {
+            GuiControl, Main: Disable +AltSubmit, c_enablefbc
+        }
     }
-    if (!(FileExist(nvenc) && FileExist(nvenc64))) {
+    if (!FileExist(nvenc) && !FileExist(nvenc64))
+    {
         GuiControl, Main: Disable +AltSubmit, c_nvenc
-    }
-    if (!(FileExist(fbc) && FileExist(fbc64))) {
-        GuiControl, Main: Disable +AltSubmit, c_enablefbc
     }
 }
-else {
-    if (!FileExist(fbcwrp)) {
-        GuiControl, Main: Disable +AltSubmit, c_nvfbcwrp
+else
+{
+    if (!FileExist(fbc_))
+    {
+        if (!FileExist(fbcwrp))
+        {
+            GuiControl, Main: Disable +AltSubmit, c_nvfbcwrp
+        }
+        if (!FileExist(fbc))
+        {
+            GuiControl, Main: Disable +AltSubmit, c_enablefbc
+        }
     }
-    if (!FileExist(nvenc)) {
+    if (!FileExist(nvenc))
+    {
         GuiControl, Main: Disable +AltSubmit, c_nvenc
-    }
-    if (!FileExist(fbc)) {
-        GuiControl, Main: Disable +AltSubmit, c_enablefbc
     }
 }
 Return

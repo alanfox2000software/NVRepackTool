@@ -146,27 +146,33 @@ Loop, Files, %extract_dir%\*, D
         NVI_DisplayDriver32 := RegExReplace(NVI_DisplayDriver31, "\r\n(.*)<file name(.*)messagebus\.conf(.*)>")  ;win10
         NVI_DisplayDriver33 := RegExReplace(NVI_DisplayDriver32, "\r\n(.*)<file name(.*)messagebus_client\.conf(.*)>") ;win10
         NVI_DisplayDriver34 := RegExReplace(NVI_DisplayDriver33, "\r\n(.*)<file name(.*)NvTelemetry\.dll(.*)>")
+        NVI_DisplayDriver35 := RegExReplace(NVI_DisplayDriver34, "nvencodeapi64\.dl_(.*)>","nvencodeapi64\.dll"">")
+        NVI_DisplayDriver36 := RegExReplace(NVI_DisplayDriver35, "nvencodeapi\.dl_(.*)>","nvencodeapi\.dll"">")
+        NVI_DisplayDriver37 := RegExReplace(NVI_DisplayDriver36, "nvfbc64\.dl_(.*)>","nvfbc64\.dll"">")
+        NVI_DisplayDriver38 := RegExReplace(NVI_DisplayDriver37, "nvfbc\.dl_(.*)>","nvfbc\.dll"">")
+        NVI_DisplayDriver39 := RegExReplace(NVI_DisplayDriver38, "nvifr64\.dl_(.*)>","nvifr64\.dll"">")
+        NVI_DisplayDriver40 := RegExReplace(NVI_DisplayDriver39, "nvifr\.dl_(.*)>","nvifr\.dll"">")
         if v_nvfbc = 0
         {
-          NVI_DisplayDriver35 := RegExReplace(NVI_DisplayDriver34, "\r\n(.*)<file name(.*)nvfbc\.dll(.*)>")
-          NVI_DisplayDriver36 := RegExReplace(NVI_DisplayDriver35, "\r\n(.*)<file name(.*)nvfbc\64.dll(.*)>")
-          NVI_DisplayDriver37 := RegExReplace(NVI_DisplayDriver36, "\r\n(.*)<(.*)installNvFBCPlugins(.*)\r\n(.*)\r\n(.*)\r\n(.*)\r\n(.*)</standard>")
+          NVI_DisplayDriver41 := RegExReplace(NVI_DisplayDriver40, "\r\n(.*)<file name(.*)nvfbc\.dll(.*)>")
+          NVI_DisplayDriver42 := RegExReplace(NVI_DisplayDriver41, "\r\n(.*)<file name(.*)nvfbc\64.dll(.*)>")
+          NVI_DisplayDriver43 := RegExReplace(NVI_DisplayDriver42, "\r\n(.*)<(.*)installNvFBCPlugins(.*)\r\n(.*)\r\n(.*)\r\n(.*)\r\n(.*)</standard>")
         }
         else
         {
-          NVI_DisplayDriver37 := NVI_DisplayDriver34
+          NVI_DisplayDriver43 := NVI_DisplayDriver40
         }
         if v_nvifr = 0
         {
-          NVI_DisplayDriver38 := RegExReplace(NVI_DisplayDriver37, "\r\n(.*)<file name(.*)nvifr\.dll(.*)>")
-          NVI_DisplayDriver39 := RegExReplace(NVI_DisplayDriver38, "\r\n(.*)<file name(.*)nvifr\64.dll(.*)>")
+          NVI_DisplayDriver44 := RegExReplace(NVI_DisplayDriver43, "\r\n(.*)<file name(.*)nvifr\.dll(.*)>")
+          NVI_DisplayDriver45 := RegExReplace(NVI_DisplayDriver44, "\r\n(.*)<file name(.*)nvifr64\.dll(.*)>")
         }
         else
         {
-          NVI_DisplayDriver39 := NVI_DisplayDriver37
+          NVI_DisplayDriver45 := NVI_DisplayDriver43
         }
         FileDelete, %A_LoopFileFullPath%
-        FileAppend, %NVI_DisplayDriver39%, %A_LoopFileFullPath%, UTF-8-RAW
+        FileAppend, %NVI_DisplayDriver45%, %A_LoopFileFullPath%, UTF-8-RAW
     }
     
     ;; setup.cfg inside NvContainer

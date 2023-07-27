@@ -1,5 +1,5 @@
 ﻿; 
-;   NvFBC patch Installer 1.0 (27-07-2020)
+;   NvFBC patch Installer 1.2 (27-07-2023)
 ;   Author: alanfox2000
 ;
 #NoTrayIcon
@@ -9,20 +9,26 @@ SetWorkingDir %A_ScriptDir%
 SetBatchLines -1
 FileEncoding, UTF-8-RAW
 
-DD = %A_WorkingDir%\Display.Driver
-NVI = %DD%\DisplayDriver.nvi
-NvFBC = %A_WorkingDir%\NvFBC
-64dl_ = %DD%\nvfbc64.dl_
-dl_ = %DD%\nvfbc.dl_
-content =
-(
-NvFBC64_.dll,,,0x00004000
-)
-content2 =
-(
-NvFBC_.dll,,,0x00004000
-)
 Title = NvFBC Patcher Installer
+display_dir = %A_WorkingDir%\Display.Driver
+display_nvi = %display_dir%\DisplayDriver.nvi
+fbcwrp_dir = %A_WorkingDir%\NvFBC
+fbc_ = %display_dir%\nvfbc_.dll
+fbc64_ = %display_dir%\nvfbc64_.dll
+
+if (A_Is64bitOS) {
+    if (FileExist(fbc_) && FileExist(fbc64_)) {
+        MsgBox, 0x2030, %Title%, Already patched!`rMake sure to tick the NVFBCEnable checkbox.
+		ExitApp
+    }
+}
+else {
+    if (FileExist(fbc_)) {
+        MsgBox, 0x2030, %Title%, Already patched!`rMake sure to tick the NVFBCEnable checkbox.
+		ExitApp
+    }
+}
+
 Ask =
 (
 NvFBC patch (wrapper) allows to use NvFBC on consumer-grade GPUs.
@@ -40,21 +46,30 @@ IfMsgBox, Yes
 }
 
 Patch:
+content =
+(
+NvFBC64_.dll,,,0x00004000
+)
+content2 =
+(
+NvFBC_.dll,,,0x00004000
+)
 SplashTextOn,,, Please wait...
-if FileExist(64dl_) and FileExist(dl_)
-{
-    Runwait, %ComSpec% /c "expand "%64dl_%" "%DD%\nvfbc64_.dll"",, Hide
-    Runwait, %ComSpec% /c "expand "%dl_%" "%DD%\nvfbc_.dll"",, Hide
-    FileDelete, %64dl_%
-    FileDelete, %dl_%
-}
 FileRead, NVI_DisplayDriver, %NVI%
-NVI_DisplayDriver2 := RegExReplace(NVI_DisplayDriver, "<file name(.*)nvfbc64.dl_(.*)>", "<file name=""nvfbc64.dll""/>`r`n`t`t<file name=""nvfbc64_.dll""/>")
-NVI_DisplayDriver3 := RegExReplace(NVI_DisplayDriver2, "<file name(.*)nvfbc.dl_(.*)>", "<file name=""nvfbc.dll""/>`r`n`t`t<file name=""nvfbc_.dll""/>")
+NVI_DisplayDriver2 := RegExReplace(NVI_DisplayDriver, "<file name(.*)nvfbc64.dll(.*)>", "<file name=""nvfbc64.dll""/>`r`n`t`t<file name=""nvfbc64_.dll""/>")
+NVI_DisplayDriver3 := RegExReplace(NVI_DisplayDriver2, "<file name(.*)nvfbc.dll(.*)>", "<file name=""nvfbc.dll""/>`r`n`t`t<file name=""nvfbc_.dll""/>")
 FileDelete, %NVI%
 FileAppend, %NVI_DisplayDriver3%, %NVI%, UTF-8-RAW
-FileCopy, %NvFBC%\nvfbcwrp64.dll, %DD%\nvfbc64.dll, 1
-FileCopy, %NvFBC%\nvfbcwrp32.dll, %DD%\nvfbc.dll, 1
+if (A_Is64bitOS) {
+FileMove, %display_dir%\nvfbc64.dll, %fbc64_%
+FileMove, %display_dir%\nvfbc.dll, %fbc_%
+FileMove, %fbcwrp_dir%\nvfbcwrp64.dll, %display_dir%\nvfbc64.dll 
+FileMove, %fbcwrp_dir%\nvfbcwrp32.dll, %display_dir%\nvfbc.dll 
+}
+else {
+FileMove, %display_dir%\nvfbc.dll, %fbc_%
+FileMove, %fbcwrp_dir%\nvfbcwrp32.dll, %display_dir%\nvfbc.dll 
+}
 Loop, Files, %DD%\*.inf, F
 {
     iniwrite, 1, %A_LoopFileFullPath%, SourceDisksFiles, NvFBC64_.dll
@@ -83,5 +98,5 @@ Loop, Files, %DD%\*.inf, F
 
 }
 SplashTextOff
-MsgBox, 0x2020, %Title%, NvFBC patch have been applied on installation files.`r`rTo undo changes`, delete the extracted driver folder then extract from the driver package again.
+MsgBox, 0x2020, %Title%, NvFBC patch have been applied to the installation files.`r`rTo undo changes`, delete the extracted driver folder then extract from the driver package again. Make sure to tick the NVFBCEnable checkbox.
 Return
