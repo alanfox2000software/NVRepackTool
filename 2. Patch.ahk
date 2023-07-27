@@ -11,6 +11,11 @@ FileEncoding, UTF-8-RAW
 output_dir = %A_WorkingDir%\Temp\Output
 extract_dir = %A_WorkingDir%\Temp\Extract
 hdw11 = %A_WorkingDir%\hdaudio\w11
+config = %A_WorkingDir%\config.ini
+
+iniread, v_nvfbcwrp, %config%, Settings, pi_nvfbcwrp
+iniread, v_nvfbc, %config%, Settings, pi_nvfbc
+iniread, v_nvifr, %config%, Settings, pi_nvifr
 
 Loop, Files, %extract_dir%\*, D
 {
@@ -26,18 +31,18 @@ Loop, Files, %extract_dir%\*, D
         inidelete, %A_LoopFileFullPath%, nv_nvcamera_copyfiles
         inidelete, %A_LoopFileFullPath%, nv_nvcamera_service_addreg
         FileRead, InfContents, %A_LoopFileFullPath%
-        InfContents1 := StrReplace(InfContents, ",nvst3*.chm") ;both
-        InfContents2 := StrReplace(InfContents1, ",nvWmi.chm") ;both
+        InfContents1 := RegExReplace(InfContents, ",nvst3\*\.chm") ;both
+        InfContents2 := RegExReplace(InfContents1, ",nvWmi\.chm") ;both
         InfContents3 := RegExReplace(InfContents2, "\r\n(.*)\.chm") ;both
-        InfContents4 := StrReplace(InfContents3, "NvSupportTelemetry = 1", "NvSupportTelemetry = 0") ;both
-        InfContents5 := StrReplace(InfContents4, ",NvInstallerUtil.dll") ;both
-        InfContents6 := StrReplace(InfContents5, "\r\nNvTelemetry64.dll = 1") ;both
+        InfContents4 := RegExReplace(InfContents3, "NvSupportTelemetry = 1", "NvSupportTelemetry = 0") ;both
+        InfContents5 := RegExReplace(InfContents4, ",NvInstallerUtil\.dll") ;both
+        InfContents6 := RegExReplace(InfContents5, "\r\nNvTelemetry64\.dll = 1") ;both
         InfContents7 := RegExReplace(InfContents6, "\r\nCopyFiles = nv_telemetry(.*)_copyfiles(.*)") ;both
         InfContents8 := RegExReplace(InfContents7, "\r\nnv_telemetry(.*)_copyfiles(.*)") ;both
         InfContents9 := RegExReplace(InfContents8, "\r\n_DisplayDriverRAS\.dll(.*)") ;dch
         InfContents10 := RegExReplace(InfContents9, "\r\nDisplayDriverRAS\.dll(.*)") ;legacy
-        InfContents11 := StrReplace(InfContents10, "\r\nDisplayDriverRAS.dll,,,0x00000010") ;legacy
-        InfContents12 := StrReplace(InfContents11, "\r\nDisplayDriverRAS.dll,,,") ;legacy
+        InfContents11 := RegExReplace(InfContents10, "\r\nDisplayDriverRAS\.dll,,,0x00000010") ;legacy
+        InfContents12 := RegExReplace(InfContents11, "\r\nDisplayDriverRAS\.dll,,,") ;legacy
         InfContents13 := RegExReplace(InfContents12, "\r\n(.*)nvprofileupdaterplugin\.dll(.*)") ;both
         InfContents14 := RegExReplace(InfContents13, "\r\n(.*)nvgwls\.exe(.*)") ;both
         InfContents15 := RegExReplace(InfContents14, "\r\n(.*)nvtopps\.db3(.*)") ;both
@@ -46,15 +51,15 @@ Loop, Files, %extract_dir%\*, D
         InfContents18 := RegExReplace(InfContents17, "\r\n(.*)nvgwls\.exe(.*)") ;both
         InfContents19 := RegExReplace(InfContents18, "\r\n(.*)dlsargs\.xml(.*)") ;both
         InfContents20 := RegExReplace(InfContents19, "\r\n(.*)dlsnetparams\.csv(.*)") ;both
-        InfContents21 := StrReplace(InfContents20, "\r\nnvPerfProvider.man = 1,NVWMI") ;dch
-        InfContents22 := StrReplace(InfContents21, "\r\nnvWmi.mof = 1,NVWMI") ;dch
-        InfContents23 := StrReplace(InfContents22, "\r\nnvWmi64.exe = 1,NVWMI") ;dch
-        InfContents24 := StrReplace(InfContents23, "\r\nAddService = NVWMI, 0x00000800, nv_nvwmi_serviceInstall") ;dch
-        InfContents25 := StrReplace(InfContents24, "\r\nAddReg = nv_nvcamera_service_addreg") ;dch
-        InfContents26 := StrReplace(InfContents25, "\r\nDisplay.Driver\NVWMI = *.*") ;dch
-        InfContents27 := StrReplace(InfContents26, "\r\nDisplay.Driver\NvCamera = *.*") ;dch
+        InfContents21 := RegExReplace(InfContents20, "\r\nnvPerfProvider\.man = 1,NVWMI") ;dch
+        InfContents22 := RegExReplace(InfContents21, "\r\nnvWmi\.mof = 1,NVWMI") ;dch
+        InfContents23 := RegExReplace(InfContents22, "\r\nnvWmi64\.exe = 1,NVWMI") ;dch
+        InfContents24 := RegExReplace(InfContents23, "\r\nAddService = NVWMI, 0x00000800, nv_nvwmi_serviceInstall") ;dch
+        InfContents25 := RegExReplace(InfContents24, "\r\nAddReg = nv_nvcamera_service_addreg") ;dch
+        InfContents26 := RegExReplace(InfContents25, "\r\nDisplay\.Driver\NVWMI = \*\.\*") ;dch
+        InfContents27 := RegExReplace(InfContents26, "\r\nDisplay\.Driver\NvCamera = \*\.\*") ;dch
         InfContents28 := RegExReplace(InfContents27, "\r\n(.*)\,NvCamera") ;dch
-        InfContents29 := StrReplace(InfContents28, "\r\nNVWMI_InstallDir = 13,NVWMI") ;dch
+        InfContents29 := RegExReplace(InfContents28, "\r\nNVWMI_InstallDir = 13,NVWMI") ;dch
         InfContents30 := RegExReplace(InfContents29, "\r\n(.*)_NvGSTPlugin\.dll(.*)")
         InfContents31 := RegExReplace(InfContents30, "\r\n(.*)_NvMsgBusBroadcast\.dll(.*)")
         InfContents32 := RegExReplace(InfContents31, "\r\n(.*)wksServicePluginZ\.dll(.*)")
@@ -63,10 +68,36 @@ Loop, Files, %extract_dir%\*, D
         InfContents35 := RegExReplace(InfContents34, "\r\n(.*)messagebus\.conf(.*)")
         InfContents36 := RegExReplace(InfContents35, "\r\n(.*)messagebus_client\.conf(.*)")
         InfContents37 := RegExReplace(InfContents36, "\r\n(.*)MessageBus\.dll(.*)")
-        InfContents38 := StrReplace(InfContents37, "\r\nNvTelemetry.dll = 1") ;both
-        InfContents39 := StrReplace(InfContents38, "\r\nnvWmi.exe = 1,NVWMI") ;dch
+        InfContents38 := RegExReplace(InfContents37, "\r\nNvTelemetry.dll = 1") ;both
+        InfContents39 := RegExReplace(InfContents38, "\r\nnvWmi\.exe = 1,NVWMI") ;dch
+        if (v_nvfbc = 0)
+        {
+          InfContents40 := RegExReplace(InfContents39, "\r\nNvFBC.dll = 1")
+          InfContents41 := RegExReplace(InfContents40, "\r\nNvFBC64.dll = 1")
+          InfContents42 := RegExReplace(InfContents41, "\r\n(.*)DriverSupportModules(.*)NvFBC.dll(.*)")
+          InfContents43 := RegExReplace(InfContents42, "\r\n(.*)DriverSupportModules(.*)NvFBC64.dll(.*)")
+          InfContents44 := RegExReplace(InfContents43, "\r\nNvFBC64\.dll,,,0x00004000")
+          InfContents45 := RegExReplace(InfContents44, "\r\nNvFBC\.dll,,,0x00004000")
+        }
+        else
+        {
+          InfContents45 := InfContents39
+        }
+        if v_nvifr = 0
+        {
+          InfContents46 := RegExReplace(InfContents45, "\r\nNvIFR.dll = 1")
+          InfContents47 := RegExReplace(InfContents46, "\r\nNvIFR64.dll = 1")
+          InfContents48 := RegExReplace(InfContents47, "\r\n(.*)DriverSupportModules(.*)NvIFRC.dll(.*)")
+          InfContents49 := RegExReplace(InfContents48, "\r\n(.*)DriverSupportModules(.*)NvIFR64.dll(.*)")
+          InfContents50 := RegExReplace(InfContents49, "\r\nNvIFR64\.dll,,,0x00004000")
+          InfContents51 := RegExReplace(InfContents50, "\r\nNvIFR\.dll,,,0x00004000")
+        }
+        else
+        {
+          InfContents51 := InfContents45
+        }
         FileDelete,  %A_LoopFileFullPath%
-        FileAppend , %InfContents39%, %A_LoopFileFullPath%, UTF-8-RAW
+        FileAppend , %InfContents51%, %A_LoopFileFullPath%, UTF-8-RAW
         IniRead, SectionNames, %A_LoopFileFullPath%
         Loop, Parse, SectionNames,`n
         {
@@ -115,8 +146,27 @@ Loop, Files, %extract_dir%\*, D
         NVI_DisplayDriver32 := RegExReplace(NVI_DisplayDriver31, "\r\n(.*)<file name(.*)messagebus\.conf(.*)>")  ;win10
         NVI_DisplayDriver33 := RegExReplace(NVI_DisplayDriver32, "\r\n(.*)<file name(.*)messagebus_client\.conf(.*)>") ;win10
         NVI_DisplayDriver34 := RegExReplace(NVI_DisplayDriver33, "\r\n(.*)<file name(.*)NvTelemetry\.dll(.*)>")
+        if v_nvfbc = 0
+        {
+          NVI_DisplayDriver35 := RegExReplace(NVI_DisplayDriver34, "\r\n(.*)<file name(.*)nvfbc\.dll(.*)>")
+          NVI_DisplayDriver36 := RegExReplace(NVI_DisplayDriver35, "\r\n(.*)<file name(.*)nvfbc\64.dll(.*)>")
+          NVI_DisplayDriver37 := RegExReplace(NVI_DisplayDriver36, "\r\n(.*)<(.*)installNvFBCPlugins(.*)\r\n(.*)\r\n(.*)\r\n(.*)\r\n(.*)</standard>")
+        }
+        else
+        {
+          NVI_DisplayDriver37 := NVI_DisplayDriver34
+        }
+        if v_nvifr = 0
+        {
+          NVI_DisplayDriver38 := RegExReplace(NVI_DisplayDriver37, "\r\n(.*)<file name(.*)nvifr\.dll(.*)>")
+          NVI_DisplayDriver39 := RegExReplace(NVI_DisplayDriver38, "\r\n(.*)<file name(.*)nvifr\64.dll(.*)>")
+        }
+        else
+        {
+          NVI_DisplayDriver39 := NVI_DisplayDriver37
+        }
         FileDelete, %A_LoopFileFullPath%
-        FileAppend, %NVI_DisplayDriver34%, %A_LoopFileFullPath%, UTF-8-RAW
+        FileAppend, %NVI_DisplayDriver39%, %A_LoopFileFullPath%, UTF-8-RAW
     }
     
     ;; setup.cfg inside NvContainer
@@ -183,19 +233,24 @@ Loop, Files, %extract_dir%\*, D
     FileCopy, Utility\NvFBC.ahk, %extract_dir%\%PackageDir%, 1
     FileCopy, Utility\Launch.bat, %extract_dir%\%PackageDir%, 1
     FileCreateDir, %extract_dir%\%PackageDir%\NVENC
-    FileCreateDir, %extract_dir%\%PackageDir%\NvFBC
-    FileCopy, NVENC\nvencodeapi.dll, %extract_dir%\%PackageDir%\NVENC,1
-    FileCopy, NvFBC\nvfbcwrp32.dll, %extract_dir%\%PackageDir%\NvFBC\nvfbcwrp32.dll,1
-
+    if v_nvfbcwrp = 1
+    {
+        FileCreateDir, %extract_dir%\%PackageDir%\NvFBC
+        FileCopy, NvFBC\nvfbcwrp32.dll, %extract_dir%\%PackageDir%\NvFBC\nvfbcwrp32.dll,1
+    }
+    ;FileCopy, NVENC\nvencodeapi.dll, %extract_dir%\%PackageDir%\NVENC,1
     If FileExist(64bitcheck)
     {
-     FileCopy, NvFBC\nvfbcwrp64.dll, %extract_dir%\%PackageDir%\NvFBC\nvfbcwrp64.dll,1
-     FileCopy, NVENC\nvencodeapi64.dll, %extract_dir%\%PackageDir%\NVENC,1
-	 FileCopy, Utility\AutoHotkeyU64.exe, %extract_dir%\%PackageDir%\AutoHotkey.exe, 1
+      if v_nvfbcwrp = 1
+      {
+        FileCopy, NvFBC\nvfbcwrp64.dll, %extract_dir%\%PackageDir%\NvFBC\nvfbcwrp64.dll,1
+      }
+      ;FileCopy, NVENC\nvencodeapi64.dll, %extract_dir%\%PackageDir%\NVENC,1
+      FileCopy, Utility\AutoHotkeyU64.exe, %extract_dir%\%PackageDir%\AutoHotkey.exe, 1
     }
     else
     {
-	 FileCopy, Utility\AutoHotkeyU32.exe, %extract_dir%\%PackageDir%\AutoHotkey.exe, 1
+     FileCopy, Utility\AutoHotkeyU32.exe, %extract_dir%\%PackageDir%\AutoHotkey.exe, 1
     }
     ;; Cfg Patch
     ;;Check which setup.cfg to use

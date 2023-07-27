@@ -19,6 +19,32 @@ sfxsplit =  %A_WorkingDir%\Tools\SfxSplit\SfxSplit.exe
 input_dir = %A_WorkingDir%\Temp\Input
 output_dir = %A_WorkingDir%\Temp\Output
 extract_dir = %A_WorkingDir%\Temp\Extract
+config = %A_WorkingDir%\config.ini
+
+iniread, v_nvfbc, %config%, Settings, pi_nvfbc
+iniread, v_nvifr, %config%, Settings, pi_nvifr
+Para_Array := []
+if v_nvfbc = 0
+{
+  Para_Array.Push("-x!Display.Driver\nvfbc.dll")
+  Para_Array.Push("-x!Display.Driver\nvfbc64.dll")
+}
+if v_nvifr = 0
+{
+  Para_Array.Push("-x!Display.Driver\nvifr.dll")
+  Para_Array.Push("-x!Display.Driver\nvifr64.dll")
+}
+Loop % Para_Array.Length()
+{
+    if A_Index = 1
+    {
+        SavedPara := % Para_Array[1]
+    }
+    else
+    {
+        SavedPara := % SavedPara " " Para_Array[A_Index]
+    }
+}
 
 Loop, Files, %input_dir%\*.exe, F
 {
@@ -36,7 +62,7 @@ Loop, Files, %input_dir%\*.exe, F
     runwait, %ComSpec% /c ""%sfxsplit%" "%A_LoopFileFullPath%" -m "%output_dir%\%A_LoopFileName%.sfx" -c "%output_dir%\%A_LoopFileName%.txt" -a "%output_dir%\%A_LoopFileName%.7z" -b"
 
     ; Driver Archive Extract
-    runwait, %7z% x "%output_dir%\%A_LoopFileName%.7z" -y -o"%extract_dir%\%FileNameNoExt%" setup.exe setup.cfg ListDevices.txt license.txt EULA.txt -r Display.Driver\* HDAudio\* NVI2\* PhysX\* PPC\* NGXCore\* -xr@exclude.lst
+    runwait, %7z% x "%output_dir%\%A_LoopFileName%.7z" -y -o"%extract_dir%\%FileNameNoExt%" setup.exe setup.cfg ListDevices.txt license.txt EULA.txt -r Display.Driver\* HDAudio\* NVI2\* PhysX\* PPC\* NGXCore\* -xr@exclude.lst %SavedPara%
 
     ;NvENC Extract
     runwait, %7z% x "%NvENC64%" -y -o"%extract_dir%\%FileNameNoExt%\NvENC"

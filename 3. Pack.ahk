@@ -29,7 +29,9 @@ Loop, Files, %extract_dir%\*, D
     NvCplSetupInt_Dir = %A_LoopFileLongPath%\NvCplSetupInt
     NvContainerSetup = %A_LoopFileLongPath%\Display.Driver\NvContainerSetup.exe
     NvContainerSetup_Dir = %A_LoopFileLongPath%\NvContainerSetup
-    
+    nvenc = %A_LoopFileLongPath%\NVENC\nvencodeapi.dll
+    nvenc64 = %A_LoopFileLongPath%\NVENC\nvencodeapi64.dll
+	
     FileDelete, %output_dir%\Temp.7z
     FileDelete, %NvCplSetupInt_Dir%\Temp.7z
     FileDelete, %NvContainerSetup_Dir%\Temp.7z
@@ -48,9 +50,11 @@ Loop, Files, %extract_dir%\*, D
         runwait, %ComSpec% /c "copy /b "%NvContainerSetup_Dir%\NvContainerSetup.sfx" + "%NvContainerSetup_Dir%\NvContainerSetup.txt" +"%NvContainerSetup_Dir%\Temp.7z" "%NvContainerSetup%""
         FileDelete, %NvContainerSetup_Dir%\Temp.7z
     }
-    
+    if (!FileExist(nvenc) || !FileExist(nvenc64)) {
+        FileRemoveDir, %A_LoopFileLongPath%\NVENC, 1
+    }
     ;  Compress Whole Driver Folder into 7z
-    runwait, %7z% a -t7z "%output_dir%\%A_LoopFileName%.7z" "%A_LoopFileLongPath%\*" -xr!NvCplSetupInt -xr!NvContainerSetup "%CMD7z%"
+    runwait, %7z% a -t7z "%output_dir%\Temp.7z" "%A_LoopFileLongPath%\*" -xr!NvCplSetupInt -xr!NvContainerSetup "%CMD7z%"
     
     ;  Combine into EXE
     runwait, %ComSpec% /c "copy /b "%output_dir%\%PackageDir%.exe.sfx" + "%output_dir%\%PackageDir%.exe.txt" + "%output_dir%\Temp.7z" "%output_dir%\%PackageDir%-%date%.exe""

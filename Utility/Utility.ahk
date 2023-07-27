@@ -1,5 +1,5 @@
 ﻿; 
-;   NVIDIA Graphic Driver Installation Utility 1.8 (25-10-2022)
+;   NVIDIA Graphic Driver Installation Utility 1.9 (27-07-2023)
 ;   Author: alanfox2000
 ;
 #NoTrayIcon
@@ -20,7 +20,15 @@ takeown = %A_WinDir%\system32\takeown.exe
 cacls = %A_WinDir%\system32\cacls.exe
 XML = C:\NVIDIAInstall.xml
 Drs = %A_AppDataCommon%\NVIDIA Corporation\Drs
-ver = 1.8
+fbc = %A_WorkingDir%\Display.Driver\nvfbc.dll
+fbc64 = %A_WorkingDir%\Display.Driver\nvfbc64.dll
+fbcwrp = %A_WorkingDir%\NvFBC\nvfbcwrp32.dll
+fbcwrp64 = %A_WorkingDir%\NvFBC\nvfbcwrp64.dll
+nvenc = %A_WorkingDir%\NVENC\nvencodeapi.dll
+nvenc64 = %A_WorkingDir%\NVENC\nvencodeapi64.dll
+fbcreg = %A_WorkingDir%\fbcreg.txt
+ver = 1.9
+
 
 full_command_line := DllCall("GetCommandLine", "str")
 if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
@@ -72,8 +80,9 @@ Gui Main:Add, Button, x152 y128 w80 h23 gDirectInstall, Directly
 Gui Main:Add, Text, x8 y158 w37 h23 +0x200, Tweak:
 Gui Main:Add, Button, x48 y158 w80 h23 gINFUtility, Add HWID
 Gui Main:Add, Button, x132 y158 w80 h23 gXtremeG, Xtreme-G
-Gui Main:Add, Button, x216 y158 w70 h23 gNVENC, NVENC
-Gui Main:Add, Button, x290 y158 w70 h23 gNvFBC, NvFBC
+Gui Main:Add, Button, x216 y158 w70 h23 vc_nvenc gNVENC, NVENC
+Gui Main:Add, Button, x290 y158 w70 h23 vc_nvfbcwrp gNvFBC, nvfbcwrp
+Gui Main:Add, CheckBox, x365 y158 w90 h23 vc_enablefbc, NVFBCEnable
 Gui Main:Add, Button, x440 y128 w160 h23 gSupportCards, Supported Graphics Cards
 Gui Main:Add, Button, x530 y158 w70 h23 gAboutGui, About
 Gui Main:Font
@@ -82,7 +91,7 @@ Gui, AboutGui: New, -SysMenu +AlwaysOnTop
 Gui, AboutGui:Color, White
 Gui AboutGui:Font, s8, Arial
 Gui AboutGui:Add, Text, x10 y10 w220 h23 +0x200, %Title% %ver%
-Gui AboutGui:Add, Text, x10 y35 w220 h23 +0x200, Copyright © 2021 alanfox2000
+Gui AboutGui:Add, Text, x10 y35 w220 h23 +0x200, Copyright © 2020-2023 alanfox2000
 Gui AboutGui:Add, Text, x7 y93 w290 h2 0x10
 Gui AboutGui:Add, Button, x218 y102 w80 h23 gAboutGuiClose, OK
 Gui AboutGui:Add, Link, x10 y65 w230 h23 +0x200, Contact: <a href="https://puresoftapps-nvidia.blogspot.com/">puresoftapps-nvidia.blogspot.com</a>
@@ -93,13 +102,27 @@ Loop % GUIDDL.Length()
 {
     GuiControl, Main: +AltSubmit, % GUIDDL[A_Index]
 }
-If !InStr(FileExist(A_WorkingDir "\NVENC"), "D")
-{
-    GuiControl, Main: Disable +AltSubmit, NVENC
+if (A_Is64bitOS) {
+    if (!(FileExist(fbcwrp) && FileExist(fbcwrp64))) {
+        GuiControl, Main: Disable +AltSubmit, c_nvfbcwrp
+    }
+    if (!(FileExist(nvenc) && FileExist(nvenc64))) {
+        GuiControl, Main: Disable +AltSubmit, c_nvenc
+    }
+    if (!(FileExist(fbc) && FileExist(fbc64))) {
+        GuiControl, Main: Disable +AltSubmit, c_enablefbc
+    }
 }
-If !InStr(FileExist(A_WorkingDir "\NvFBC"), "D")
-{
-    GuiControl, Main: Disable +AltSubmit, NvFBC
+else {
+    if (!FileExist(fbcwrp)) {
+        GuiControl, Main: Disable +AltSubmit, c_nvfbcwrp
+    }
+    if (!FileExist(nvenc)) {
+        GuiControl, Main: Disable +AltSubmit, c_nvenc
+    }
+    if (!FileExist(fbc)) {
+        GuiControl, Main: Disable +AltSubmit, c_enablefbc
+    }
 }
 Return
 
@@ -116,6 +139,7 @@ IfMsgBox, No
 IfMsgBox, Yes
 {
     gosub ArgBuild
+	gosub t_fbcreg
     RunWait, %ComSpec% /c %bcdedit% /set testsigning on,, Hide
     RunWait, %ComSpec% /c %schtasks% /Create /TN "NVIDIAInstall" /TR ""%ComSpec%" /c" /RL HIGHEST /SC ONLOGON /F,, Hide
     FileDelete, %XML%
@@ -141,6 +165,7 @@ IfMsgBox, No
 IfMsgBox, Yes
 {
     gosub ArgBuild
+	gosub t_fbcreg
     Gui, Main:Hide
     goto InstallType2
 }
@@ -215,6 +240,14 @@ Loop % Para_Array.Length()
     {
         SavedPara := % SavedPara " " Para_Array[A_Index]
     }
+}
+Return
+
+
+t_fbcreg:
+If c_enablefbc = 1
+{
+FileAppend,, %fbcreg%
 }
 Return
 
@@ -296,11 +329,13 @@ Loop, Files, %A_WorkingDir%\Display.Driver\NVCPL\*.appx, F
 Return
 
 EnableNVFBC:
-if FileExist(A_WorkingDir "\Display.Driver\nvfbc64_.dll")
-{
-    RegWrite, REG_DWORD, HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm, NVFBCEnable , 1
+if FileExist(fbcreg) {
+    RegWrite, REG_DWORD, HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm, NVFBCEnable, 1
+} else {
+    RegDelete, HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\nvlddmkm, NVFBCEnable
 }
-Return
+FileDelete, %fbcreg%
+return
 
 SupportCards:
 Run, %A_WorkingDir%\ListDevices.txt
