@@ -2,7 +2,7 @@
 
  1. Install [AutoHotkey](https://www.autohotkey.com/download/ahk-v2.exe) and download [this repository](https://github.com/alanfox2000software/NVRepackTool/archive/refs/heads/main.zip).
  2. Place the downloaded .exe driver files in the Temp\Input folder.
- 3. Edit the config.ini file and modify the following variables. Set them to 0 to remove the corresponding file(s), or set them to 1 to add/keep those file(s).
+ 3. Edit the `config.ini` file and modify the following variables. Set them to 0 to remove the corresponding file(s), or set them to 1 to add/keep those file(s).
    - `pi_nvfbcwrp` [nvfbcwrp32.dll, nvfbcwrp64.dll](https://github.com/keylase/nvidia-patch/tree/master/win/nvfbcwrp)
    - `pi_nvfbc` nNvFBC.dll, nNvFBC64.dll
    - `pi_nvifr` nNvIFR.dll, nNvIFR64.dll
