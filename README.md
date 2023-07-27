@@ -1,5 +1,3 @@
-Markdown format, english grammar check:
-
 # NVIDIA Driver Repack Tool
 
  1. Install [AutoHotkey](https://www.autohotkey.com/download/ahk-v2.exe) and download [this repository](https://github.com/alanfox2000software/NVRepackTool/archive/refs/heads/main.zip).
@@ -12,7 +10,6 @@ Markdown format, english grammar check:
  5. Run `2. Patch.ahk`, it will cleanup .inf and nvi files.
    - [Optional] Follow [this guide](https://github.com/keylase/nvidia-patch/tree/master/win) if you want NVENC patch. Copy `nvencodeapi64.dll` and `nvencodeapi.dll` located at `Temp\Extract\\{driver folder}\Disaply.Driver` folder to `Temp\Extract\\{driver folder}\NVENC`. Select those files under the `NVENC` folder for patching.
    - [Optional] Replace `Temp\Extract\\{driver folder}\HDAudio` folder if you want [Dolby Digital Live](https://github.com/alanfox2000software/NVRepackTool/tree/ddl/hdaudio).
-6. "Run '3. Pack.ahk'. An .exe repack file will be created once the compression is finished.
+ 6. "Run '3. Pack.ahk'. An .exe repack file will be created once the compression is finished.
 
 [More info](https://puresoftapps-nvidia.blogspot.com/)
-
