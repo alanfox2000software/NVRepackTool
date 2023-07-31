@@ -38,10 +38,10 @@ Loop, Files, %extract_dir%\*, D
     
     If FileExist(NvCplSetupInt)
     {
-        FileDelete, %NvCplSetupInt_Dir%\Temp.7z
-        runwait, %7z% a -t7z "%NvCplSetupInt_Dir%\Temp.7z" "%NvCplSetupInt_Dir%\Extract\*" "%CMD7z%"
-        runwait, %ComSpec% /c "copy /b "%NvCplSetupInt_Dir%\NvCplSetupInt.sfx" + "%NvCplSetupInt_Dir%\NvCplSetupInt.txt" +"%NvCplSetupInt_Dir%\Temp.7z" "%NvCplSetupInt%""
-        FileDelete, %NvCplSetupInt_Dir%\Temp.7z
+       FileDelete, %NvCplSetupInt_Dir%\Temp.7z
+       runwait, %7z% a -t7z "%NvCplSetupInt_Dir%\Temp.7z" "%NvCplSetupInt_Dir%\Extract\*" "%CMD7z%"
+       runwait, %ComSpec% /c "copy /b "%NvCplSetupInt_Dir%\NvCplSetupInt.sfx" + "%NvCplSetupInt_Dir%\NvCplSetupInt.txt" +"%NvCplSetupInt_Dir%\Temp.7z" "%NvCplSetupInt%""
+       FileDelete, %NvCplSetupInt_Dir%\Temp.7z
     }
     
     If FileExist(NvContainerSetup)
