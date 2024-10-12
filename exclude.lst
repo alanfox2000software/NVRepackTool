@@ -10,6 +10,7 @@ Display.Driver\Display.NvContainer\plugins\Session\_NvGSTPlugin.dll
 Display.Driver\Display.NvContainer\plugins\Session\NvProfileUpdaterPlugin.dll
 Display.Driver\Display.NvContainer\plugins\LocalSystem\_DisplayDriverRAS.dll
 Display.Driver\Display.NvContainer\plugins\LocalSystem\_NvMsgBusBroadcast.dll
+Display.Driver\Display.NvContainer\plugins\LocalSystem\_nvtopps.dll
 Display.Driver\Display.NvContainer\plugins\LocalSystem\messagebus.conf
 Display.Driver\Display.NvContainer\plugins\LocalSystem\wksServicePluginZ.dll
 Display.Driver\Display.NvContainer\plugins\LocalSystem\wksServicePlugin.dll
@@ -19,6 +20,7 @@ Display.Driver\Display.NvContainer\dlsargs.xml
 Display.Driver\Display.NvContainer\nvtopps.db3
 Display.Driver\Display.NvContainer\MessageBus.dll
 Display.Driver\Display.NvContainer\messagebus_client.conf
+Display.Driver\Display.NvContainer\NvMessageBus.dll
 Display.Driver\NvTelemetry64.dll
 Display.Driver\wksServicePlugin.dll
 FrameViewSDK\EULA.txt

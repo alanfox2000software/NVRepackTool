@@ -39,6 +39,7 @@ Loop, Files, %extract_dir%\*, D
         c_inf := RegExReplace(c_inf, ",NvInstallerUtil\.dll") ;both
         c_inf := RegExReplace(c_inf, "\r\nNvTelemetry64\.dll = 1") ;both
         c_inf := RegExReplace(c_inf, "\r\nCopyFiles = nv_telemetry(.*)_copyfiles(.*)") ;both
+        c_inf := RegExReplace(c_inf, "\r\nCopyFiles = nv_nvcamera_copyfiles(.*)") 
         c_inf := RegExReplace(c_inf, "\r\nnv_telemetry(.*)_copyfiles(.*)") ;both
         c_inf := RegExReplace(c_inf, "\r\n_DisplayDriverRAS\.dll(.*)") ;dch
         c_inf := RegExReplace(c_inf, "\r\nDisplayDriverRAS\.dll(.*)") ;legacy
@@ -47,7 +48,6 @@ Loop, Files, %extract_dir%\*, D
         c_inf := RegExReplace(c_inf, "\r\n(.*)nvprofileupdaterplugin\.dll(.*)") ;both
         c_inf := RegExReplace(c_inf, "\r\n(.*)nvgwls\.exe(.*)") ;both
         c_inf := RegExReplace(c_inf, "\r\n(.*)nvtopps\.db3(.*)") ;both
-        c_inf := RegExReplace(c_inf, "\r\n_nvtopps\.dll(.*)") ;dch
         c_inf := RegExReplace(c_inf, "\r\n(.*)nvtopps\.dll(.*)") ;legacy
         c_inf := RegExReplace(c_inf, "\r\n(.*)nvgwls\.exe(.*)") ;both
         c_inf := RegExReplace(c_inf, "\r\n(.*)dlsargs\.xml(.*)") ;both
@@ -57,15 +57,14 @@ Loop, Files, %extract_dir%\*, D
         c_inf := RegExReplace(c_inf, "\r\nnvWmi64\.exe = 1,NVWMI") ;dch
         c_inf := RegExReplace(c_inf, "\r\nAddService = NVWMI, 0x00000800, nv_nvwmi_serviceInstall") ;dch
         c_inf := RegExReplace(c_inf, "\r\nAddReg = nv_nvcamera_service_addreg") ;dch
-        c_inf := RegExReplace(c_inf, "\r\nDisplay\.Driver\NVWMI = \*\.\*") ;dch
-        c_inf := RegExReplace(c_inf, "\r\nDisplay\.Driver\NvCamera = \*\.\*") ;dch
+        c_inf := RegExReplace(c_inf, "\r\nDisplay\.Driver\\NVWMI = \*\.\*") ;dch
+        c_inf := RegExReplace(c_inf, "\r\nDisplay\.Driver\\NvCamera = \*\.\*") ;dch
         c_inf := RegExReplace(c_inf, "\r\n(.*)\,NvCamera") ;dch
         c_inf := RegExReplace(c_inf, "\r\nNVWMI_InstallDir = 13,NVWMI") ;dch
         c_inf := RegExReplace(c_inf, "\r\n(.*)_NvGSTPlugin\.dll(.*)")
         c_inf := RegExReplace(c_inf, "\r\n(.*)_NvMsgBusBroadcast\.dll(.*)")
         c_inf := RegExReplace(c_inf, "\r\n(.*)wksServicePluginZ\.dll(.*)")
         c_inf := RegExReplace(c_inf, "\r\n(.*)wksServicePlugin\.dll(.*)")
-        c_inf := RegExReplace(c_inf, "\r\n(.*)_NvMsgBusBroadcast\.dll(.*)")
         c_inf := RegExReplace(c_inf, "\r\n(.*)messagebus\.conf(.*)")
         c_inf := RegExReplace(c_inf, "\r\n(.*)messagebus_client\.conf(.*)")
         c_inf := RegExReplace(c_inf, "\r\n(.*)MessageBus\.dll(.*)")
