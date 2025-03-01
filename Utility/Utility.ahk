@@ -1,5 +1,5 @@
 ﻿; 
-;   NVIDIA Graphic Driver Installation Utility 1.9 (27-07-2023)
+;   NVIDIA Graphic Driver Installation Utility 2.0 (01-03-2025)
 ;   Author: alanfox2000
 ;
 #NoTrayIcon
@@ -29,7 +29,7 @@ fbcwrp64 = %A_WorkingDir%\NvFBC\nvfbcwrp64.dll
 nvenc = %A_WorkingDir%\NVENC\nvencodeapi.dll
 nvenc64 = %A_WorkingDir%\NVENC\nvencodeapi64.dll
 fbcreg = %A_WorkingDir%\fbcreg.txt
-ver = 1.9
+ver = 2.0
 
 
 full_command_line := DllCall("GetCommandLine", "str")
@@ -64,18 +64,20 @@ Gui, Main:Color, White
 Gui Main:Font,, Arial
 Gui Main:Add, Text, x8 y8 w230 h23, NVIDIA Install Application Switches:
 Gui Main:Add, CheckBox, vChkSilent x8 y32 w14 h23 +Checked
-Gui Main:Add, CheckBox, vChkClean x376 y56 w134 h23 +Checked, Clean Install[-clean]
+Gui Main:Add, DropDownList, x24 y32 w150 vSilentOptions, Silent [-s]|Progress Only [-passive]||
+Gui Main:Add, CheckBox, vChkReboot x180 y32 w14 h23 +Checked
+Gui Main:Add, DropDownList, x198 y32 w125 vRebootOptions, Reboot Required [-k]|Ignore Reboot [-n]||
+Gui Main:Add, CheckBox, vChkGFE x328 y32 w14 h23 +Checked
+Gui Main:Add, DropDownList, x346 y32 w160 vGFEOptions, -gfexperienceinitiated:true|-gfexperienceinitiated:false||
+Gui Main:Add, CheckBox, vChkNvApp x8 y56 w14 h23 +Checked
+Gui Main:Add, DropDownList, x24 y56 w130 vNvAppOptions, -nvappinitiated:true|-nvappinitiated:false||
+Gui Main:Add, CheckBox, vChkFinish x160 y56 w158 h23 +Checked, Skip Finish Dialog [-nofinish]
+Gui Main:Add, CheckBox, vChkEula x318 y56 w148 h23 +Checked, Skip EULA Dialog [-noeula]
+Gui Main:Add, CheckBox, vChkClean x466 y56 w134 h23 +Checked, Clean Install[-clean]
 Gui Main:Add, CheckBox, vChkTelemetry x8 y80 w14 h23 +Checked
 Gui Main:Add, DropDownList, x24 y80 w153 vTelemetryOptions, -enableTelemetry:true|-enableTelemetry:false||
-Gui Main:Add, CheckBox, vChkReboot x192 y32 w14 h23 +Checked
-Gui Main:Add, CheckBox, vChkEula x208 y56 w163 h23 +Checked, Skip EULA Dialog [-noeula]
-Gui Main:Add, DropDownList, x24 y56 w180 vGFEOptions, -gfexperienceinitiated:true|-gfexperienceinitiated:false||
-Gui Main:Add, CheckBox, vChkGFE x8 y56 w14 h23 +Checked
-Gui Main:Add, CheckBox, vChkFinish x352 y32 w173 h23 +Checked, Skip Finish Dialog [-nofinish]
 Gui Main:Add, CheckBox, vChkPNP x184 y80 w189 h23, Ignore PNP Flag [-ignorepnp]
-Gui Main:Add, DropDownList, x208 y32 w139 vRebootOptions, Reboot Required [-k]|Ignore Reboot [-n]||
-Gui Main:Add, DropDownList, x24 y32 w160 vSilentOptions, Silent [-s]|Progress Only [-passive]||
-Gui Main:Add, CheckBox, x376 y80 w198 h23 vChkSplash +Checked, No Splash Screen [-nosplash]
+Gui Main:Add, CheckBox, x344 y80 w198 h23 vChkSplash +Checked, No Splash Screen [-nosplash]
 Gui Main:Add, Text, x8 y128 w37 h23 +0x200, Install:
 Gui Main:Add, Button, x48 y128 w100 h23 gAutoInstall, Automatically
 Gui Main:Add, Button, x152 y128 w80 h23 gDirectInstall, Directly
@@ -93,13 +95,13 @@ Gui, AboutGui: New, -SysMenu +AlwaysOnTop
 Gui, AboutGui:Color, White
 Gui AboutGui:Font, s8, Arial
 Gui AboutGui:Add, Text, x10 y10 w220 h23 +0x200, %Title% %ver%
-Gui AboutGui:Add, Text, x10 y35 w220 h23 +0x200, Copyright © 2020-2023 alanfox2000
+Gui AboutGui:Add, Text, x10 y35 w220 h23 +0x200, Copyright © 2020-2025 alanfox2000
 Gui AboutGui:Add, Text, x7 y93 w290 h2 0x10
 Gui AboutGui:Add, Button, x218 y102 w80 h23 gAboutGuiClose, OK
-Gui AboutGui:Add, Link, x10 y65 w230 h23 +0x200, Contact: <a href="https://puresoftapps-nvidia.blogspot.com/">puresoftapps-nvidia.blogspot.com</a>
+Gui AboutGui:Add, Link, x10 y65 w230 h23 +0x200, Contact: <a href="https://github.com/alanfox2000software/NVRepackTool">Github Page</a>
 Gui AboutGui:Font
 Gui Main:Show, w604 h186, %Title%
-GUIDDL := ["TelemetryOptions", "GFEOptions", "RebootOptions", "SilentOptions"]
+GUIDDL := ["TelemetryOptions", "GFEOptions", "RebootOptions", "SilentOptions", "NvAppOptions"]
 Loop % GUIDDL.Length()
 {
     GuiControl, Main: +AltSubmit, % GUIDDL[A_Index]
@@ -225,7 +227,25 @@ If ChkFinish = 1
 }
 If ChkGFE = 1
 {
-    Para_Array.Push("-gfexperienceinitiated:false")
+        If GFEOptions = 1
+    {
+        Para_Array.Push("-gfexperienceinitiated:true")
+    }
+        If GFEOptions = 2
+    {        
+        Para_Array.Push("-gfexperienceinitiated:false")
+    }
+}
+If ChkNvApp = 1
+{
+        If NvAppOptions = 1
+    {
+        Para_Array.Push("-nvappinitiated:true")
+    }
+        If NvAppOptions = 2
+    {        
+        Para_Array.Push("-nvappinitiated:false")
+    }
 }
 If (ChkReboot = "1") and (InstallType = "2")
 {

@@ -258,17 +258,16 @@ Loop, Files, %extract_dir%\*, D
      FileCopy, Utility\AutoHotkeyU32.exe, %extract_dir%\%PackageDir%\AutoHotkey.exe, 1
     }
     ;; Cfg Patch
-    ;;Check which setup.cfg to use
+    ;; Check which setup.cfg to use
     ;;
     ;; Product Type
     ;;
     ;; 100 ???
     ;; 103 Data Center Driver / RTX Enterprise Production Branch
-    ;; 300 Game Ready Dirver win7/8
+    ;; 300 Game Ready Driver Win7/8
     ;; 301 Studio Driver nsd 4xx
-    ;; 303 Game Ready Driver Win10/11
-    ;; 304 Studio Driver nsd
     ;; 
+	;; 
     FileEncoding, UTF-8
     FileRead, setupcfg_content, %SetupCfg%
     Pos := RegExMatch(setupcfg_content, "ProductType(.*)[0-9]+.[0-9]+", tmp2)
