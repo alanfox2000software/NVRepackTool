@@ -266,8 +266,11 @@ Loop, Files, %extract_dir%\*, D
     ;; 103 Data Center Driver / RTX Enterprise Production Branch
     ;; 300 Game Ready Driver Win7/8
     ;; 301 Studio Driver nsd 4xx
+    ;; 303 Game Ready Driver with GeForce Experience Win10/11
+    ;; 304 Studio Driver GeForce Experience Win10/11
+    ;; 305 Game Ready Driver with NVIDIA App Win10/11
+    ;; 306 Studio Driver with NVIDIA App Win10/11
     ;; 
-	;; 
     FileEncoding, UTF-8
     FileRead, setupcfg_content, %SetupCfg%
     Pos := RegExMatch(setupcfg_content, "ProductType(.*)[0-9]+.[0-9]+", tmp2)
